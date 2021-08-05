@@ -107,7 +107,13 @@ export default function Home() {
                     <Spinner /></Center> :
                 <Box>
                     <Center mb={5}>
-                        <Button colorScheme="blue" onClick={() => setFormState({ ...formState, isVisible: true })}>Add New Question</Button>
+                        <Button colorScheme="blue" onClick={() => setFormState({
+                            question: '',
+                            correct_answer: '',
+                            incorrect_answers: ['', '', ''],
+                            id: '',
+                            category, isVisible: true
+                        })}>Add New Question</Button>
                     </Center>
                     <Table variant="striped" colorScheme="teal">
                         <TableCaption>Quiz App Users</TableCaption>
@@ -153,6 +159,6 @@ export default function Home() {
                 onClose={() => setFormState({ ...formState, isVisible: false })}
                 onSubmit={submitEditing}
             />
-        </Box>
+        </Box >
     )
 }

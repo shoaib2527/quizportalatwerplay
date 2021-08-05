@@ -90,7 +90,12 @@ export default function Categories() {
                     <Spinner /></Center> :
                 <Box>
                     <Center mb={5}>
-                        <Button colorScheme="blue" onClick={() => setFormState({ ...formState, isVisible: true })}>Add Category</Button>
+                        <Button colorScheme="blue" onClick={() => setFormState({
+                            ...formState,
+                            category: '',
+                            id: '',
+                            isVisible: true
+                        })}>Add Category</Button>
                     </Center>
                     <Table variant="striped" colorScheme="teal">
                         <TableCaption>Quiz App Users</TableCaption>
