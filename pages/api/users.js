@@ -20,8 +20,8 @@ export default async function handler(req, res) {
    * @description Body:{ id: <cat id>}
    */
   if (req.method === 'DELETE') {
-    await auth.deleteUser(req.body.id)
-    await firestore.collection('Users').doc(req.body.id).delete()
+    await auth.deleteUser(req.query.id)
+    await firestore.collection('Users').doc(req.query.id).delete()
     res.status(200).json({ ok: true })
   }
 }

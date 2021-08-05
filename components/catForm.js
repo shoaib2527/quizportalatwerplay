@@ -1,10 +1,9 @@
 import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Input } from "@chakra-ui/react"
 import React from 'react'
 
-const UserForm = ({
+const CatForm = ({
     isOpen, onClose = () => { },
-    onChangeEmail = () => { }, email = '',
-    onChangeUserName = () => { }, userName = '',
+    onChangeCategory = () => { }, category = '',
     onSubmit = () => { } }) => {
     return (<Drawer
         isOpen={isOpen}
@@ -13,10 +12,9 @@ const UserForm = ({
         <DrawerOverlay />
         <DrawerContent>
             <DrawerCloseButton />
-            <DrawerHeader>Edit User Account</DrawerHeader>
+            <DrawerHeader>Create Quiz Category</DrawerHeader>
             <DrawerBody>
-                <Input placeholder="Type Email Address" my={5} value={email} onChange={(val) => onChangeEmail(val.target.value)} />
-                <Input placeholder="Type User Name Here" mb={5} value={userName} onChange={(val) => onChangeUserName(val.target.value)} />
+                <Input placeholder="Type Category Name here" my={5} value={category} onChange={(val) => onChangeCategory(val.target.value)} />
                 <Button variant="outline" mr={3} onClick={onClose}>
                     Cancel
                 </Button>
@@ -27,4 +25,4 @@ const UserForm = ({
         </DrawerContent>
     </Drawer>)
 }
-export default UserForm
+export default CatForm

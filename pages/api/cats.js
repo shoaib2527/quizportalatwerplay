@@ -8,14 +8,13 @@ export default async function handler(req, res) {
       arr.push({ ...snap.data(), id: snap.id })
     })
     res.status(200).json({ ok: true, count: arr.length, cats: arr })
-
   }
   /**
    * @description Body:{category: <cat name>}
    */
   if (req.method === 'POST') {
-    await firestore.collection('Categories').add(req.body)
-    res.status(200).json({ ok: true })
+    let r = await firestore.collection('Categories').add(req.body);
+    res.status(200).json({ ok: true, data: { id: r.id, ...req.body } })
   }
   /**
    * @description Body:{category: <cat name>, id: <cat id>}
@@ -28,12 +27,12 @@ export default async function handler(req, res) {
    * @description Body:{ id: <cat id>}
    */
   if (req.method === 'DELETE') {
-    await firestore.collection('Categories').doc(req.body.id).delete()
+    await firestore.collection('Categories').doc(req.query.id).delete()
     const usersQuerySnapshot = await firestore.collection('Questions')
-      .where('category', '==', req.body.id).get();
+      .where('category', '==', req.query.id).get();
 
     // Create a new batch instance
-    const batch = firestore().batch();
+    const batch = firestore.batch();
 
     usersQuerySnapshot.forEach(documentSnapshot => {
       batch.delete(documentSnapshot.ref);

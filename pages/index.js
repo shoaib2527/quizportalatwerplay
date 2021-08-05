@@ -7,9 +7,9 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [formState, setFormState] = useState({
     isVisible: false,
-    isNew: false,
     email: '',
-    userName: ''
+    userName: '',
+    id: '',
   })
   const getUsers = () => {
     setLoading(true)
@@ -28,6 +28,52 @@ export default function Home() {
   useEffect(() => {
     getUsers()
   }, [])
+  const deleteUser = (user) => {
+    var r = confirm("Are you sure you want to delete " + user.userName);
+    if (r) {
+      fetch('/api/users?id=' + user.id, {
+        method: 'DELETE',
+      })
+        .then(r => r.json())
+        .then(r => {
+          setUsers(users.filter(item => item.id != user.id))
+        }).catch(err => {
+          console.log(err)
+          alert("Something went wrong.")
+        })
+    }
+  }
+  const submitEditing = () => {
+    fetch('/api/users', {
+      method: 'PUT',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: formState.id,
+        userName: formState.userName,
+        email: formState.email
+      })
+    })
+      .then(r => r.json())
+      .then(r => {
+        let newUsers = [...users]
+        let index = newUsers.findIndex(item => item.id == formState.id)
+        if (index > -1) {
+          newUsers[index] = { id: formState.id, userName: formState.userName, email: formState.email }
+          setUsers(newUsers)
+        }
+        setFormState({
+          isVisible: false,
+          email: '',
+          userName: '',
+          id: '',
+        })
+      }).catch(err => {
+        console.log(err)
+        alert("Something went wrong.")
+      })
+  }
   return (
     <Box mx={"5vw"} my={2}>
       {loading ?
@@ -44,14 +90,14 @@ export default function Home() {
           </Thead>
           <Tbody>
             {users.map(user =>
-              <Tr>
+              <Tr key={user.id}>
                 <Td>{user.id}</Td>
                 <Td>{user.userName}</Td>
                 <Td>{user.email}</Td>
                 <Td>
                   <Flex>
-                    <EditIcon cursor="pointer" onClick={() => setFormState({ ...formState, isVisible: true })} mx={3} />
-                    <DeleteIcon mx={3} />
+                    <EditIcon cursor="pointer" onClick={() => setFormState({ ...formState, isVisible: true, id: user.id, email: user.email, userName: user.userName })} mx={3} />
+                    <DeleteIcon cursor="pointer" onClick={() => deleteUser(user)} mx={3} />
                   </Flex>
                 </Td>
               </Tr>)}
@@ -62,7 +108,7 @@ export default function Home() {
         onChangeEmail={(email) => setFormState({ ...formState, email })}
         onChangeUserName={(userName) => setFormState({ ...formState, userName })}
         onClose={() => setFormState({ ...formState, isVisible: false })}
-        onSubmit={() => setFormState({ ...formState, isVisible: false })}
+        onSubmit={submitEditing}
       />
     </Box>
   )
